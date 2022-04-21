@@ -11,7 +11,9 @@ void FSM_Pump(){
       }
     break;
     case pumpStates::PumpOn:
-    Serial.println("PumpOn");
+     if(DEBUG){
+        Serial.println("pumpStates::PumpOn");
+      }
     pumpCounter++;
       if(pumpCounter >= pumpTimeInCycles){
         pumpCounter = 0;

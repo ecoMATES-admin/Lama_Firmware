@@ -1,36 +1,18 @@
-//## Pinning##
-#define PUMP 3 //Turns pump on and off via relay
-#define PUMPMODE 4 // activates test mode of stepper motor -> 30 rot/min
+#include "globalVariables.h"
+#include <SoftwareSerial.h>
 
-// !!!!! Is it enough to use PUMPMODE to turn pump on and off? ?????
-
-//##Variables##
-//#Debug#
-#define DEBUG 1
-bool testFlag = false;
-//#SystemClock#
-unsigned long previousTime = 0; 
-unsigned long systemPeriod = 10; // milliseconds
-//#FSM_Pump#
-const uint32_t pumpIntervalInCyles = 100*60*15; // 100 cycles/second * 60 seconds * 15 min --> 1 pump cycle every 15 min
-const uint32_t pumpTimeInCycles = 100*100; //100 cycles/second * 100 seconds --> 1 pump cycle duration = 100 sec
-uint32_t pumpCounter = 74000;
-enum class pumpStates:uint8_t{
-  Idle, PumpOn
-};
-pumpStates pumpState = pumpStates::Idle;
-
+//##Object intialization##
+//SoftwareSerial
+SoftwareSerial NodeSerial(SW_RX, SW_TX); //(rx,tx)
 
 void setup() {
   //#Objects
   Serial.begin(9600);
   //#Pins
-  pinMode(PUMP, OUTPUT);
   pinMode(PUMPMODE, OUTPUT);
-  digitalWrite(PUMP, HIGH);
   digitalWrite(PUMPMODE, LOW);
-  delay(15000); // gives power supply time to launch
-  digitalWrite(PUMP, LOW);
+  //delay(15000); // gives power supply time to launch
+  
 
 }
 
@@ -40,8 +22,31 @@ void loop() {
     previousTime = currentTime;
 
     //FSM
+    FSM_Test();
     FSM_Pump();
+    FSM_DataLog();
 
   }
 
+}
+
+void FSM_Test(){
+  switch(testState){
+    case testStates::Idle:
+      pumpCounter++;
+      if(testCounter >= 6000){
+        testCounter = 1;
+        testState = testStates::StartTest;
+        digitalWrite(PUMPMODE, HIGH);
+      }
+    break;
+    case testStates::StartTest:
+    if(DEBUG){
+        Serial.println("testStates::StartTest");
+      }
+      testFlag= true;
+      testState = testStates::Idle;
+    break;
+  }
+  
 }
