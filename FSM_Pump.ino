@@ -2,7 +2,6 @@
 void FSM_Pump(){
   switch(pumpState){
     case pumpStates::Idle:
-    Serial.println("IDLE");
       pumpCounter++;
       if(pumpCounter >= 80000){
         pumpCounter = 0;

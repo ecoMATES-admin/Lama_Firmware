@@ -18,17 +18,17 @@
 
 //#Test#
 bool testFlag = false;
-int testCounter = 0;
+int testCounter = 2000;
 enum class testStates:uint8_t{
   Idle, StartTest
 };
 testStates testState = testStates::Idle;
 
 //#Sensor data#
-float tempTank = {0};
-float tempMat = {0};
-float ph = {0};
-float weight = {0};
+float tempTank = 0;
+float tempMat = 0;
+float ph = 0;
+float weight = 0;
 
 //#SystemClock#
 unsigned long previousTime = 0; 
@@ -47,8 +47,8 @@ pumpStates pumpState = pumpStates::Idle;
 //#FSM_DataLog#
 char dataBuffer[6] = {0};
 enum class dataLogStates:uint8_t{
-  Idle, SendData
+  SendDummy, Idle, SendData
 };
-dataLogStates dataLogState = dataLogStates::Idle;
+dataLogStates dataLogState = dataLogStates::SendDummy;
 
 #endif

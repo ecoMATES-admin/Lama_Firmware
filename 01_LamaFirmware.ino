@@ -8,6 +8,7 @@ SoftwareSerial NodeSerial(SW_RX, SW_TX); //(rx,tx)
 void setup() {
   //#Objects
   Serial.begin(9600);
+  NodeSerial.begin(115200);
   //#Pins
   pinMode(PUMPMODE, OUTPUT);
   digitalWrite(PUMPMODE, LOW);
@@ -23,7 +24,7 @@ void loop() {
 
     //FSM
     FSM_Test();
-    FSM_Pump();
+    //FSM_Pump();
     FSM_DataLog();
 
   }
@@ -33,11 +34,14 @@ void loop() {
 void FSM_Test(){
   switch(testState){
     case testStates::Idle:
-      pumpCounter++;
-      if(testCounter >= 6000){
+      testCounter++;
+      if(testCounter >= 3000){
         testCounter = 1;
+        tempTank++;
+        Serial.println(tempTank);
+        ph++;
+        weight++;
         testState = testStates::StartTest;
-        digitalWrite(PUMPMODE, HIGH);
       }
     break;
     case testStates::StartTest:

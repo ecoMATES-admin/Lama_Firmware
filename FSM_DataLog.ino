@@ -1,11 +1,14 @@
 
 void FSM_DataLog() {
   switch (dataLogState) {
+    case dataLogStates::SendDummy: //admitedly whack fix for weird bug, that first value does not get uploaded to thinkspeak...
+      NodeSerial.println("Dummy");
+      dataLogState = dataLogStates::Idle;
+      break;
     case dataLogStates::Idle:
       if (testFlag) {
         testFlag=false;
         dataLogState = dataLogStates::SendData;
-        break;
       }
       break;
     case dataLogStates::SendData:
@@ -13,7 +16,7 @@ void FSM_DataLog() {
         Serial.println("dataLogStates::SendAll");
       }
       dtostrf(tempTank, 4, 2, dataBuffer);
-      NodeSerial.print("VXa");
+      NodeSerial.print("Xa");
       NodeSerial.println(dataBuffer);
       memset(dataBuffer, 0, 6);
       dtostrf(ph, 4, 2, dataBuffer);
