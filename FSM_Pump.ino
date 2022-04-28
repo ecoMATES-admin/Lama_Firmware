@@ -1,24 +1,23 @@
 
-void FSM_Pump(){
-  switch(pumpState){
+void FSM_Pump() {
+  switch (pumpState) {
     case pumpStates::Idle:
-      pumpCounter++;
-      if(pumpCounter >= 80000){
-        pumpCounter = 0;
+      if (pumpOnFlag) {
+        pumpOnFlag = false;
         pumpState = pumpStates::PumpOn;
-        digitalWrite(PUMPMODE, HIGH);
+        digitalWrite(PUMP, HIGH);
       }
-    break;
+      break;
     case pumpStates::PumpOn:
-     if(DEBUG){
+      if (DEBUG) {
         Serial.println("pumpStates::PumpOn");
       }
-    pumpCounter++;
-      if(pumpCounter >= pumpTimeInCycles){
+      pumpCounter++;
+      if (pumpCounter >= (pumpTimeInSec * 1000 / systemPeriod)) {
         pumpCounter = 0;
         pumpState = pumpStates::Idle;
-        digitalWrite(PUMPMODE, LOW);
+        digitalWrite(PUMP, LOW);
       }
-    break;
+      break;
   }
 }

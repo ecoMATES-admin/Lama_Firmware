@@ -10,10 +10,8 @@ void setup() {
   Serial.begin(9600);
   NodeSerial.begin(115200);
   //#Pins
-  pinMode(PUMPMODE, OUTPUT);
-  digitalWrite(PUMPMODE, LOW);
-  //delay(15000); // gives power supply time to launch
-  
+  pinMode(PUMP, OUTPUT);
+  digitalWrite(PUMP, LOW);
 
 }
 
