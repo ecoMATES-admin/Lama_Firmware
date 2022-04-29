@@ -1,13 +1,16 @@
 void FSM_MasterTimer() {
   switch (masterTimerState) {
     case masterTimerStates::Idle:
-      if (masterCounter % (pumpIntervalInHours * hourInSec * secInMilisec / systemPeriod) == 0) {
+      if (timer.getCount() - pumptimeSnap >= (pumpIntervalInHours * hourInSec * secInMilisec / systemPeriod)) {
+        pumptimeSnap = timer.getCount();
         pumpTimingFlag = true;
       }
-      if (masterCounter % (samplingIntervalInMin * minInSec * secInMilisec / systemPeriod) == 0) {
+      if (timer.getCount() - sampletimeSnap >= (samplingIntervalInMin * minInSec * secInMilisec / systemPeriod)) {
+        sampletimeSnap = timer.getCount();
         sensorTimingFlag = true;
       }
-      if (masterCounter % (dayInSec * secInMilisec / systemPeriod) == 0 ) {
+      if (timer.getCount() - newDaySnap >= (dayInSec * secInMilisec / systemPeriod)) {
+        newDaySnap = timer.getCount();
         dayTimingFlag = true;
       }
 
@@ -44,5 +47,4 @@ void FSM_MasterTimer() {
     default:
       Serial.println("Error: FSM_MasterTimer()");
   }
-  masterCounter++;
 }
